@@ -20,6 +20,14 @@ function draw() { // built-in P5.JS function -=-  automatic loop that repeats fo
 	}
 }
 
+function mousePressed()
+{
+	for(let i = 0; i < bubbles.length; i++)
+	{
+		bubbles[i].hovered(mouseX, mouseY);
+	}
+}
+
 class Bubble
 {
 	constructor(x, y, r)
@@ -27,6 +35,15 @@ class Bubble
 		this.x = x;
 		this.y = y;
 		this.r = r;
+	}
+
+	hovered(mx, my)
+	{
+		let d = dist(mx, my, this.x, this.y);
+		if(d < this.r)
+		{
+			console.log("Warning");
+		}
 	}
 
 	move()
@@ -44,3 +61,4 @@ class Bubble
 		ellipse(this.x, this.y, (this.r*2), (this.r*2));
 	}
 }
+
