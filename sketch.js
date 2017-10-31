@@ -2,11 +2,11 @@ let bubbles = [];
 
 function setup() { // built-in P5.JS function -=- this runs once
 	createCanvas(600, 400);
-	for(let i = 0; i < 50; i++)
+	for(let i = 0; i < 30; i++)
 	{
-		let x = random(10 + i * 12, (10 + i * 12)+10);
+		let x = random(width);
 		let y = random(10, 150);
-		let radius = random(10, 20);
+		let radius = random(10, 30);
 		bubbles[i] = new Bubble(x, y, radius);
 	}
 }
@@ -20,11 +20,14 @@ function draw() { // built-in P5.JS function -=-  automatic loop that repeats fo
 	}
 }
 
-function mousePressed()
+function mouseMoved()
 {
 	for(let i = 0; i < bubbles.length; i++)
 	{
-		bubbles[i].hovered(mouseX, mouseY);
+		if(bubbles[i].rollover(mouseX, mouseY))
+		{
+			bubbles[i].splice(i, 1);
+		}
 	}
 }
 
@@ -35,15 +38,18 @@ class Bubble
 		this.x = x;
 		this.y = y;
 		this.r = r;
+		this.brightness = 0;
 	}
 
-	hovered(mx, my)
+	changeColor()
+	{
+		this.brightness = 255;
+	}
+
+	rollover(mx, my)
 	{
 		let d = dist(mx, my, this.x, this.y);
-		if(d < this.r)
-		{
-			console.log("Warning");
-		}
+		return d < this.r;
 	}
 
 	move()
@@ -57,7 +63,7 @@ class Bubble
 	{
 		stroke(255);
 		strokeWeight(2);
-		noFill();
+		fill(this.brightness, 125);
 		ellipse(this.x, this.y, (this.r*2), (this.r*2));
 	}
 }
