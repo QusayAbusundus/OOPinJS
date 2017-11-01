@@ -6,7 +6,7 @@ function setup() { // built-in P5.JS function -=- this runs once
 	{
 		let x = random(width);
 		let y = random(10, 150);
-		let radius = random(10, 30);
+		let radius = random(10, 15);
 		bubbles[i] = new Bubble(x, y, radius);
 	}
 }
@@ -15,18 +15,26 @@ function draw() { // built-in P5.JS function -=-  automatic loop that repeats fo
 	background(0); // give the canvas a black background
 	for(let i = 0; i < bubbles.length; i++)
 	{
+		if(bubbles[i].contains(mouseX, mouseY))
+		{
+			bubbles[i].changeColor(255);
+		}
+		else
+		{
+			bubbles[i].changeColor(0);
+		}
 		bubbles[i].move();
 		bubbles[i].show();
 	}
 }
 
-function mouseMoved()
+function mousePressed()
 {
 	for(let i = 0; i < bubbles.length; i++)
 	{
-		if(bubbles[i].rollover(mouseX, mouseY))
+		if(bubbles[i].contains(mouseX, mouseY))
 		{
-			bubbles[i].splice(i, 1);
+			bubbles.splice(i, 1);
 		}
 	}
 }
@@ -41,12 +49,12 @@ class Bubble
 		this.brightness = 0;
 	}
 
-	changeColor()
+	changeColor(brightness)
 	{
-		this.brightness = 255;
+		this.brightness = brightness;
 	}
 
-	rollover(mx, my)
+	contains(mx, my)
 	{
 		let d = dist(mx, my, this.x, this.y);
 		return d < this.r;
