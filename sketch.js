@@ -1,8 +1,12 @@
 let bubbles = [];
 let gameState = 0; //0 = titlescreen, 1 = ingame, 2 = pause, 3 = win, 4 = lose
+let score = 0;
+let counter = 99;
+const winningScore = 50;
 
 function setup() { // built-in P5.JS function -=- this runs once
 	createCanvas(600, 400);
+	setInterval(clockTimer, 1000);
 	for(let i = 0; i < 5; i++)
 	{
 		let x = random(width * 0.25, width * 0.75);
@@ -14,19 +18,47 @@ function setup() { // built-in P5.JS function -=- this runs once
 
 function draw() { // built-in P5.JS function -=-  automatic loop that repeats forever
 	background(0); // give the canvas a black background
-	for(let i = 0; i < bubbles.length; i++)
+	drawScoreTimerText();
+	if(gameState == 1)
 	{
-		if(bubbles[i].contains(mouseX, mouseY))
+		for(let i = 0; i < bubbles.length; i++)
 		{
-			bubbles[i].changeColor(255);
+			if(bubbles[i].contains(mouseX, mouseY))
+			{
+				bubbles[i].changeColor(255);
+			}
+			else
+			{
+				bubbles[i].changeColor(0);
+			}
+			bubbles[i].move();
+			bubbles[i].show();
+			bubbles[i].screenWrapping(width + 100, height);
 		}
-		else
-		{
-			bubbles[i].changeColor(0);
-		}
-		bubbles[i].move();
-		bubbles[i].show();
-		bubbles[i].screenWrapping(width + 100, height);
+	}
+}
+
+function drawScoreTimerText()
+{
+	fill(255);
+	textSize(32);
+	text("Score: " + score, 5, 30)
+	text("Time: " + counter, 5, 60)
+}
+
+function clockTimer()
+{
+	if(gameState == 1 && counter > 0)
+	{
+		counter--;
+	}
+	else if(score => winningScore && counter == 0)
+	{
+		gameState == 3;
+	}
+	else if(score < winningScore && counter == 0)
+	{
+		gameState == 4;
 	}
 }
 
@@ -36,7 +68,7 @@ function mousePressed()
 	{
 		gameState = 1;
 	}
-	if(gameState = 1)
+	if(gameState == 1)
 	{
 		for(let i = 0; i < bubbles.length; i++)
 		{
@@ -46,9 +78,13 @@ function mousePressed()
 			}
 		}
 	}
+	if(gameState == 2)
+	{
+		gameState = 1;
+	}
 }
 
-function keyPressed
+function keyPressed()
 {
 	if(gameState == 1)
 	{
