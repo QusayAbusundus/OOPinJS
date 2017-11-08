@@ -1,4 +1,5 @@
 let bubbles = [];
+let aliens = [];
 let gameState = 0; //0 = titlescreen, 1 = ingame, 2 = pause, 3 = win, 4 = lose
 let score = 0;
 let counter = 99;
@@ -12,14 +13,20 @@ function setup() { // built-in P5.JS function -=- this runs once
 		let x = random(width * 0.25, width * 0.75);
 		let y = random(i * -600, i * -400);
 		let radius = random(10, 15);
-		bubbles[i] = new Bubble(x, y, radius);
+		let xVelocity = random(-2, 2);
+		let yVelocity = 3;
+		bubbles[i] = new Bubble(x, y, radius, xVelocity, yVelocity);
 	}
 }
 
 function draw() { // built-in P5.JS function -=-  automatic loop that repeats forever
 	background(0); // give the canvas a black background
 	drawScoreTimerText();
-	if(gameState == 1)
+	if(gameState == 0)
+	{
+		titleScreen();
+	}
+	else if(gameState == 1)
 	{
 		for(let i = 0; i < bubbles.length; i++)
 		{
@@ -35,6 +42,18 @@ function draw() { // built-in P5.JS function -=-  automatic loop that repeats fo
 			bubbles[i].show();
 			bubbles[i].screenWrapping(width + 100, height);
 		}
+	}
+	else if(gameState == 2)
+	{
+		paused();
+	}
+	else if(gameState == 3)
+	{
+		win();
+	}
+	else if(gameState == 4)
+	{
+		lose();
 	}
 }
 
@@ -52,14 +71,54 @@ function clockTimer()
 	{
 		counter--;
 	}
-	else if(score => winningScore && counter == 0)
+	else if(score >= winningScore && counter == 0)
 	{
-		gameState == 3;
+		gameState = 3;
 	}
 	else if(score < winningScore && counter == 0)
 	{
-		gameState == 4;
+		gameState = 4;
 	}
+}
+
+function titleScreen()
+{
+	fill(255, 0, 0);
+	textSize(64);
+	textAlign(CENTER);
+	text("ALIEN INVADERS!", width/2, height/2);
+	textSize(32);
+	text("Press the left mouse button to start", width/2, height/2 + 30);
+}
+
+function paused()
+{
+	fill(255);
+	textSize(64);
+	textAlign(CENTER);
+	text("PAUSE", width/2, height/2);
+	textSize(32);
+	text("Press the left mouse button to continue", width/2, height/2 + 30);
+}
+
+function win()
+{
+	fill(255);
+	textSize(64);
+	textAlign(CENTER);
+	text("YOU WIN!", width/2, height/2);
+	textSize(32);
+	text("Congratulations!", width/2, height/2 + 30);
+}
+
+function lose()
+{
+	fill(255);
+	textSize(64);
+	textAlign(CENTER);
+	text("YOU LOSE", width/2, height/2);
+	textSize(32);
+	text("Too bad", width/2, height/2 + 30);
 }
 
 function mousePressed()
@@ -95,11 +154,6 @@ function keyPressed()
 	}
 }
 
-function titleScreen()
-{
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,11 +165,13 @@ function titleScreen()
 
 class Bubble
 {
-	constructor(x, y, r)
+	constructor(x, y, r, xVelocity, yVelocity)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = r;
+		this.xVelocity = xVelocity;
+		this.yVelocity = yVelocity;
 	}
 
 	changeColor(brightness)
@@ -131,8 +187,8 @@ class Bubble
 
 	move()
 	{
-		this.x = this.x + random(-5, 5);
-		this.y = this.y + random(1, 7);
+		this.x = this.x + this.xVelocity;
+		this.y = this.y + this.yVelocity;
 	}
 
 	screenWrapping(xLimit, yLimit)
