@@ -8,6 +8,15 @@ const winningScore = 50;
 function setup() { // built-in P5.JS function -=- this runs once
 	createCanvas(600, 400);
 	setInterval(clockTimer, 1000);
+	for(let i = 0; i < 50; i++)
+	{
+		let x = random(width)
+		let y = random(0, height * 0.2)
+		let size = random(15, 25)
+		let xVelocity = 0;
+		let yVelocity = 2;
+		aliens[i] = new Alien(x, y, size, xVelocity, yVelocity);
+	}
 	for(let i = 0; i < 5; i++)
 	{
 		let x = random(width * 0.25, width * 0.75);
@@ -41,6 +50,11 @@ function draw() { // built-in P5.JS function -=-  automatic loop that repeats fo
 			bubbles[i].move();
 			bubbles[i].show();
 			bubbles[i].screenWrapping(width + 100, height);
+		}
+		for(let i = 0; i < aliens.length; i++)
+		{
+			aliens[i].move();
+			aliens[i].show();
 		}
 	}
 	else if(gameState == 2)
@@ -214,14 +228,13 @@ class Bubble
 
 class Alien
 {
-	constructor(x1, y1, x2, y2, x3, y3)
+	constructor(x, y, size, velocityX, velocityY)
 	{
-		this.rightX = x1;
-		this.rightY = y1;
-		this.topX = x2;
-		this.topY = y2;
-		this.leftX = x3;
-		this.leftY = y3;
+		this.x = x;
+		this.y = y;
+		this.size = size;
+		this.velocityX = velocityX;
+		this.velocityY = velocityY;
 	}
 
 	changeColor(brightness)
@@ -229,8 +242,25 @@ class Alien
 		this.brightness = brightness;
 	}
 
-	contains()
+	contains(mx, my)
 	{
+		let d;
+		d = dist(mx, my, this.x, this.y);
+		return d < this.size;
 
+	}
+
+	move()
+	{
+		this.x = this.x + this.velocityX;
+		this.y = this.y + this.velocityY;
+	}
+
+	show()
+	{
+		stroke(255);
+		strokeWeight(4);
+		noFill();
+		triangle(this.x - this.size, this.y - this.size, this.x, this.y + this.size, this.x + this.size, this.y - this.size);
 	}
 }
