@@ -3,10 +3,11 @@ let bubbles = [];
 let gameState = 0; //0 = titlescreen, 1 = ingame, 2 = pause, 3 = win, 4 = lose
 let score = 0;
 let counter = 99;
+let bgColor = 0;
 const winningScore = 50;
 
 function setup() { // built-in P5.JS function -=- this runs once
-	createCanvas(600, 400);
+	createCanvas(1000, 800);
 	setInterval(clockTimer, 1000);
 	/* for(let i = 0; i < 50; i++)
 	{
@@ -17,19 +18,19 @@ function setup() { // built-in P5.JS function -=- this runs once
 		let yVelocity = 2;
 		aliens[i] = new Alien(x, y, size, xVelocity, yVelocity);
 	} */
-	for(let i = 0; i < 5; i++)
+	for(let i = 0; i < 100; i++)
 	{
-		let x = random(width * 0.25, width * 0.75);
-		let y = random(i * -600, i * -400);
-		let radius = random(10, 15);
+		let x = random(0, width);
+		let y = random(i * -400, i * -200);
+		let radius = random(10, 45);
 		let xVelocity = random(-2, 2);
-		let yVelocity = 3;
+		let yVelocity = 10;
 		bubbles[i] = new Bubble(x, y, radius, xVelocity, yVelocity);
 	}
 }
 
 function draw() { // built-in P5.JS function -=-  automatic loop that repeats forever
-	background(0); // give the canvas a black background
+	background(bgColor); // give the canvas a black background
 	drawScoreTimerText();
 	if(gameState == 0)
 	{
@@ -117,6 +118,7 @@ function paused()
 
 function win()
 {
+	bgColor = "Green";
 	fill(255);
 	textSize(64);
 	textAlign(CENTER);
@@ -127,6 +129,7 @@ function win()
 
 function lose()
 {
+	bgColor = "Red"; 
 	fill(255);
 	textSize(64);
 	textAlign(CENTER);
@@ -148,6 +151,18 @@ function mousePressed()
 			if(bubbles[i].contains(mouseX, mouseY))
 			{
 				bubbles.splice(i, 1);
+				if(bubbles[i].r > 25)
+				{
+					score++;
+				}
+				else if(bubbles[i].r <= 25 && bubbles[i].r >= 15)
+				{
+					score += 2;
+				}
+				else
+				{
+					score += 3;
+				}
 			}
 		}
 	}
